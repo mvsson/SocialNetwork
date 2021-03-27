@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace SocialNetwork.Domain.Entities
 {
-    public class Skill : EntityBase
+    public class UserTag : EntityBase
     {
         [Display(Name = "Название навыка")]
         public override string Name { get; set; }
 
         [Display(Name = "Описание навыка")] 
         public override string Description { get; set; }
+
+        [Display(Name = "Пользователи")]
+        public ICollection<UserProfile> ProfileModels { get; set; } = new List<UserProfile>();
     }
 }

@@ -13,8 +13,6 @@ namespace SocialNetwork.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-
-
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -23,16 +21,6 @@ namespace SocialNetwork.Controllers
         }
         [AllowAnonymous]
         public IActionResult Index()
-        {
-            return View();
-        }
-        
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        public IActionResult Register()
         {
             return View();
         }

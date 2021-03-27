@@ -11,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocialNetwork.Domain;
+using SocialNetwork.Domain.Entities;
+using SocialNetwork.Domain.Repositories.Abstract;
+using SocialNetwork.Domain.Repositories.EntityFramework;
 using SocialNetwork.Services;
 
 namespace SocialNetwork
@@ -30,12 +33,16 @@ namespace SocialNetwork
             Configuration.Bind("Project", new Config());
             services.AddControllersWithViews();
 
-            // добавление ApplicationDbContext для взаимодействия с базой данных учетных записей
+            services.AddTransient<IProfilesRepository, EfProfilesRepository>();
+            services.AddTransient<IUserTagsRepository, EfUserTagsRepository>();
+            services.AddTransient<DataManager>();
+
+            // добавление ApplicationDbContext 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Config.ConnectionString));
 
-            // добавление сервисов Idenity
-            services.AddDefaultIdentity<IdentityUser>((options =>
+            // добавление сервисов Identity
+            services.AddDefaultIdentity<CustomUser>(options =>
                 {
                     options.User.RequireUniqueEmail = true;
                     options.Password.RequiredLength = 6;
@@ -43,7 +50,7 @@ namespace SocialNetwork
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                     options.Password.RequireDigit = false;
-                }))
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
         }
 

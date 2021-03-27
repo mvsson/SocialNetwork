@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using SocialNetwork.Domain;
+using SocialNetwork.Domain.Entities;
 using SocialNetwork.Models;
 
 namespace SocialNetwork.Controllers
@@ -16,11 +18,11 @@ namespace SocialNetwork.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<CustomUser> _userManager;
+        private readonly SignInManager<CustomUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailSender emailSender)
+        public AccountController(UserManager<CustomUser> userManager, SignInManager<CustomUser> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -35,7 +37,7 @@ namespace SocialNetwork.Controllers
                 return LocalRedirect(returnUrl??"/");
             }
             ViewBag.returlUrl = returnUrl;
-            return View(new LoginViewModel());
+            return View(nameof(Login));
         }
 
         [HttpPost]
@@ -44,10 +46,10 @@ namespace SocialNetwork.Controllers
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await _userManager.FindByNameAsync(model.UserName);
-                if (user != null)
+                CustomUser customUser = await _userManager.FindByNameAsync(model.UserName);
+                if (customUser != null)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+                    var result = await _signInManager.PasswordSignInAsync(customUser, model.Password, model.RememberMe, false);
                     if (result.Succeeded)
                     {
                         return Redirect(returnUrl ?? "/");
@@ -71,7 +73,12 @@ namespace SocialNetwork.Controllers
             returnUrl ??= "/";
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email};
+                var user = new CustomUser()
+                {
+                    UserName = model.Email, 
+                    Email = model.Email, 
+                    UserProfile = new UserProfile() { Email = model.Email}
+                };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

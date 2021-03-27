@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +12,12 @@ namespace SocialNetwork.Domain.Entities
     {
         protected EntityBase()
         {
-            DateAdded = DateTime.UtcNow;
+            DateAdded = DateTime.Today;
+            Id = Guid.NewGuid().ToString();
         }
 
-        [Required]
-        public virtual Guid Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public virtual string Id { get; set; } 
 
         [Display(Name = "Name")]
         public virtual string Name { get; set; }
@@ -23,10 +25,7 @@ namespace SocialNetwork.Domain.Entities
         [Display(Name = "Description")]
         public virtual string Description { get; set; }
 
-        [DataType(DataType.Time)]
+        [DataType(DataType.Date)]
         public virtual DateTime DateAdded { get; set; }
-
-        [Display(Name = "SEO Title")]
-        public virtual string MetaTitle { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<CustomUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
@@ -10,13 +12,42 @@
 <body>
     @await Html.PartialAsync("HeaderPartial")
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div id="main-wrapper">
+        <div class="wrapper style2">
+            <div class="inner">
+                <div class="container-fluid">
+                    <div class="row">
+                        @{
+                            if (SignInManager.IsSignedIn(User))
+                            {
+                                @await Html.PartialAsync("LeftSideMenuPartial")
+
+                                <div class="col-9 col-12-medium">
+                                    <div id="content">
+                                        <article>
+                                            @RenderBody()
+                                        </article>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 col-12-medium">
+                                    <div id="content">
+                                        <article>
+                                            @RenderBody()
+                                        </article>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    @await  Html.PartialAsync("FooterPartial")
+    @await Html.PartialAsync("FooterPartial")
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
