@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "wwwroot/js/signalrReqHandler.min.js",
+    "inputFiles": [
+      "wwwroot/js/signalrReqHandler.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/chat.min.js",
+    "inputFiles": [
+      "wwwroot/js/chat.js"
+    ]
+  }
+]

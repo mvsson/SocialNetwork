@@ -12,7 +12,7 @@ namespace SocialNetwork.Domain.Entities
     {
         protected EntityBase()
         {
-            DateAdded = DateTime.Today;
+            DateAdded = DateTime.UtcNow;
             Id = Guid.NewGuid().ToString();
         }
 
@@ -22,10 +22,7 @@ namespace SocialNetwork.Domain.Entities
         [Display(Name = "Name")]
         public virtual string Name { get; set; }
 
-        [Display(Name = "Description")]
-        public virtual string Description { get; set; }
-
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public virtual DateTime DateAdded { get; set; }
     }
 }

@@ -11,10 +11,12 @@ namespace SocialNetwork.Domain
     {
         public IProfilesRepository Profiles { get; set; }
         public IUserTagsRepository UserTags { get; set; }
-        public DataManager(IProfilesRepository profiles, IUserTagsRepository userTags)
+        public IMessagesRepository Messages { get; set; }
+        public DataManager(IProfilesRepository profiles, IUserTagsRepository userTags, IMessagesRepository messages)
         {
             Profiles = profiles;
             UserTags = userTags;
+            Messages = messages;
         }
     }
 }

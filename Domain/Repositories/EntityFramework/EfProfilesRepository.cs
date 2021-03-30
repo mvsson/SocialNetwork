@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Domain.Entities;
@@ -30,30 +31,19 @@ namespace SocialNetwork.Domain.Repositories.EntityFramework
             {
                 CustomUserId = user.Id,
                 Email = user.Email,
-
             };
             return user.UserProfile;
-            
-            
         }
-        
+
+        public ICollection<UserProfile> GetProfilesByTag(string tag)
+        {
+            var tagWithProfiles = _context.UserTags.Where(t => t.Name == tag).Include(t => t.UserProfiles).FirstOrDefault();
+            return tagWithProfiles?.UserProfiles;
+        }
+
         public void SaveProfile(UserProfile entity)
         {
-
-            if (_context.Profiles.Any(p => p.Id == entity.Id))
-            {
-                _context.Entry(entity).State = EntityState.Modified;
-            }
-            else
-            {
-                _context.Entry(entity).State = EntityState.Added;
-            }
-            _context.SaveChanges();
-        }
-
-        public void DeleteProfile(string id)
-        {
-            _context.Profiles.Remove(new UserProfile() {Id = id});
+            _context.Entry(entity).State = _context.Profiles.Any(p => p.CustomUserId == entity.CustomUserId) ? EntityState.Modified : EntityState.Added;
             _context.SaveChanges();
         }
     }

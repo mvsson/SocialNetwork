@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SocialNetwork.Domain.Entities;
 
-namespace SocialNetwork.Areas.Identity.Pages.Account.Manage
+namespace SocialNetwork.Areas.Identity.Account.Manage
 {
     public class ChangePasswordModel : PageModel
     {

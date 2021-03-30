@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SocialNetwork.Controllers
 {
+    
     public class UserTagsController : Controller
     {
         public IActionResult Index()

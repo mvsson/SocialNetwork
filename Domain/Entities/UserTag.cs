@@ -13,9 +13,9 @@ namespace SocialNetwork.Domain.Entities
         public override string Name { get; set; }
 
         [Display(Name = "Описание навыка")] 
-        public override string Description { get; set; }
+        public string Description { get; set; }
 
         [Display(Name = "Пользователи")]
-        public ICollection<UserProfile> ProfileModels { get; set; } = new List<UserProfile>();
+        public ICollection<UserProfile> UserProfiles { get; set; } = new List<UserProfile>();
     }
 }

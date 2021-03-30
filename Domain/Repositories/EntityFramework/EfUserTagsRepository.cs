@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Domain.Entities;
@@ -19,9 +20,10 @@ namespace SocialNetwork.Domain.Repositories.EntityFramework
             return _context.UserTags;
         }
 
-        public UserTag GetUserTagById(string id)
+        public ICollection<UserTag> GetTagsByUserId(string guid)
         {
-            return _context.UserTags.FirstOrDefault(x => x.Id == id);
+            var profileWithTags = _context.Profiles.Where(p => p.CustomUserId == guid).Include(p => p.UserTags).FirstOrDefault();
+            return profileWithTags?.UserTags;
         }
 
         public UserTag GetUserTagByName(string name)
@@ -31,13 +33,15 @@ namespace SocialNetwork.Domain.Repositories.EntityFramework
 
         public void SaveUserTag(UserTag entity)
         {
-            _context.Entry(entity).State = entity.Id == default ? EntityState.Added : EntityState.Modified;
+            if (_context.Profiles.Any(t => t.Name == entity.Name))
+                return;
+            _context.Entry(entity).State = EntityState.Added;
             _context.SaveChanges();
         }
 
-        public void DeleteUserTag(string id)
+        public void DeleteUserTag(string name)
         {
-            _context.UserTags.Remove(new UserTag() { Id = id });
+            _context.UserTags.Remove(new UserTag() { Name = name });
             _context.SaveChanges();
         }
     }

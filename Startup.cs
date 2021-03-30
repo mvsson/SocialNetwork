@@ -14,6 +14,7 @@ using SocialNetwork.Domain;
 using SocialNetwork.Domain.Entities;
 using SocialNetwork.Domain.Repositories.Abstract;
 using SocialNetwork.Domain.Repositories.EntityFramework;
+using SocialNetwork.Hubs;
 using SocialNetwork.Services;
 
 namespace SocialNetwork
@@ -35,6 +36,7 @@ namespace SocialNetwork
 
             services.AddTransient<IProfilesRepository, EfProfilesRepository>();
             services.AddTransient<IUserTagsRepository, EfUserTagsRepository>();
+            services.AddTransient<IMessagesRepository, EFMessagesRepository>();
             services.AddTransient<DataManager>();
 
             // добавление ApplicationDbContext 
@@ -52,6 +54,8 @@ namespace SocialNetwork
                     options.Password.RequireDigit = false;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +73,11 @@ namespace SocialNetwork
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<ChatHub>("/messages/im");
+            });
 
             app.UseEndpoints(endpoints =>
             {

@@ -11,15 +11,15 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace SocialNetwork.Domain.Entities
 {
-    public class UserProfile : EntityBase
+    public class UserProfile
     {
         [Key]
-        [ForeignKey(nameof(CustomUserOf))]
         public string CustomUserId { get; set; }
+        [ForeignKey(nameof(CustomUserId))]
         public CustomUser CustomUserOf { get; set; }
 
         [Display(Name = "Имя")]
-        public override string Name { get; set; }
+        public string Name { get; set; }
 
         [Display(Name = "Фамилия")]
         public string SurName { get; set; }
@@ -33,9 +33,12 @@ namespace SocialNetwork.Domain.Entities
         public string Email { get; set; }
 
         [Display(Name = "Навыки")] 
-        public ICollection<UserTag> Skills { get; set; } = new List<UserTag>();
+        public ICollection<UserTag> UserTags { get; set; } = new List<UserTag>();
 
         [Display(Name = "Фото")]
         public string AvatarImagePath { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime DateAdded { get; set; } = DateTime.UtcNow;
     }
 }
