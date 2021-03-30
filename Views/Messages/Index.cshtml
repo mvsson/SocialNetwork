@@ -3,13 +3,13 @@
     var userName = User.Identity.Name;
 }
 
-<div class="jumbotron bg-light">
-    <h2 class="text-center text-primary">
+<div class="bg-light">
+    <h4 class="text-center text-primary">
         <i class="fab fa-facebook-messenger"></i>&nbsp; Public Talk
-    </h2>
+    </h4>
 
     <div class="row">
-        <div class="col-md-12" id="chat">
+        <div class="col-md-12 scrollable_div" id="chat">
             @if (Model != null)
             {
                 @foreach (var message in Model.OrderBy(m => m.DateAdded))
@@ -29,11 +29,11 @@
                         timePosition = "time-left";
                         textAlign = "text-left";
                         contcolor = "bg-light";
-                        offset = "";
+                        offset = "col-md-6";
                     }
 
                     <div class="row">
-                        <div class="@offset">
+                        <div class="@offset border-bottom">
                             <div class="@containerClass @contcolor">
 
                                 <p class="sender @textAlign">@message.Name</p>
@@ -64,12 +64,9 @@
 
 </div>
 <div class="row">
-    @if (User.Identity.IsAuthenticated)
-    {
-        <script>
-            const userName = "@userName";
-        </script>
-    }
+    <script>
+        const userName = "@userName";
+    </script>
 </div>
 
 

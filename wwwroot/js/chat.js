@@ -12,15 +12,19 @@ const textInput = document.getElementById('messageText');
 const whenInput = document.getElementById('when');
 const chat = document.getElementById('chat');
 const messagesQueue = [];
+chat.scrollTop = chat.scrollHeight;
 
 document.getElementById('submitButton').addEventListener('click', () => {
     var currentdate = new Date();
     let when = document.createElement('span');
     when.innerHTML =
-        (currentdate.getMonth() + 1) + "/"
-        + currentdate.getDate() + "/"
-        + currentdate.getFullYear() + " "
-        + currentdate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+        currentdate.getDate() +
+        "." +
+        (currentdate.getMonth() + 1) +
+        "." +
+        currentdate.getFullYear() +
+        " " +
+        currentdate.toLocaleString('ru', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false });
 });
 
 function clearInputField() {
@@ -53,19 +57,22 @@ function addMessageToChat(message) {
     text.innerHTML = message.text;
 
     let when = document.createElement('span');
-    when.className = isCurrentUserMessage ? "time-right text-light" : "text-right";
+    when.className = isCurrentUserMessage ? "time-right text-light" : "time-right";
 
     var currentdate = new Date();
-    when.innerHTML = 
-        (currentdate.getMonth() + 1) + "/"
-        + currentdate.getDate() + "/"
-        + currentdate.getFullYear() + " "
-        + currentdate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+    when.innerHTML =
+        currentdate.getDate() +
+        "." +
+        (currentdate.getMonth() + 1) +
+        "." +
+        currentdate.getFullYear() +
+        " " +
+        currentdate.toLocaleString('ru', { hour: 'numeric', minute: 'numeric', second: 'numeric',  hour12: false });
 
     let row = document.createElement('div');
     row.className = "row";
     let div = document.createElement('div');
-    div.className = isCurrentUserMessage ? "col-md-6 offset-md-6" : "";
+    div.className = isCurrentUserMessage ? "col-md-6 offset-md-6" : "col-md-6";
 
     container.appendChild(sender);
     container.appendChild(text);
@@ -73,4 +80,5 @@ function addMessageToChat(message) {
     div.appendChild(container);
     row.appendChild(div);
     chat.appendChild(row);
+    chat.scrollTop=chat.scrollHeight;
 }

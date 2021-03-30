@@ -35,6 +35,10 @@ namespace SocialNetwork.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (message.Text == null || message.Text?.Trim() == "")
+                {
+                    return Ok();
+                }
                 message.Name = User.Identity?.Name;
                 var sender = await _userManager.GetUserAsync(User);
                 message.SenderId = sender.Id;

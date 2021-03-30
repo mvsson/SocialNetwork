@@ -35,7 +35,8 @@ namespace SocialNetwork.Domain.Entities
         [Display(Name = "Навыки")] 
         public ICollection<UserTag> UserTags { get; set; } = new List<UserTag>();
 
-        [Display(Name = "Фото")]
+        [Display(Name = "Фото ")]
+        [DataType(DataType.ImageUrl)]
         public string AvatarImagePath { get; set; }
 
         [DataType(DataType.Date)]

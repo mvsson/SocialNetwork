@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Skillsweb.Services;
 using SocialNetwork.Domain;
 using SocialNetwork.Domain.Entities;
+using SocialNetwork.Services;
 
 namespace SocialNetwork.Controllers
 {
@@ -34,8 +34,7 @@ namespace SocialNetwork.Controllers
         public IActionResult Edit()
         {
             var guid = _userManager.GetUserId(User);
-            UserProfile entity;
-            entity = _dataManager.Profiles.GetProfileByUserId(guid);
+            UserProfile entity = _dataManager.Profiles.GetProfileByUserId(guid);
             
             return View(entity);
         }
@@ -43,7 +42,7 @@ namespace SocialNetwork.Controllers
         [HttpPost]
         public IActionResult Edit(UserProfile model, IFormFile avatarImageFile)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && avatarImageFile.IsPicExtention() && avatarImageFile.IsValidSize(2*1024*1024)) // size = 2Mb
             {
                 if (avatarImageFile != null)
                 {

@@ -12,7 +12,7 @@ namespace SocialNetwork.Domain.Entities
     {
         protected EntityBase()
         {
-            DateAdded = DateTime.UtcNow;
+            DateAdded = DateTime.Now;
             Id = Guid.NewGuid().ToString();
         }
 

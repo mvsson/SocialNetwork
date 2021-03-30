@@ -35,15 +35,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="AvatarImagePath"></label>
-                <input type="file" name="avatarImageFile" id="avatarImageFile" />
-                @{
-                    if (Model?.AvatarImagePath?.Length > 1)
-                    {
-                        <div>
-                            <img class="img-thumbnail" src="~/images/@Model?.AvatarImagePath" />
-                        </div>
+                <div class="row">
+                    @{
+                        if (Model?.AvatarImagePath?.Length > 1)
+                        {
+                            <div class="col-sm-2">
+                                <img class="img-thumbnail" src="~/images/@Model?.AvatarImagePath" />
+                            </div>
+                        }
                     }
-                }
+                    <input type="file" name="avatarImageFile" id="avatarImageFile" />
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="UserTags"></label>
