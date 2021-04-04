@@ -32,8 +32,14 @@ namespace SocialNetwork.Domain.Entities
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        [Display(Name = "Навыки")] 
-        public ICollection<UserTag> UserTags { get; set; } = new List<UserTag>();
+        [InverseProperty(nameof(SkillTag.MentorUsers))]
+        [Display(Name = "Умею, практикую:")] 
+        public ICollection<SkillTag> OwnSkills { get; set; } = new List<SkillTag>();
+
+        [InverseProperty(nameof(SkillTag.StudyUsers))]
+
+        [Display(Name = "Хочу научиться:")]
+        public ICollection<SkillTag> WantedSkills { get; set; } = new List<SkillTag>();
 
         [Display(Name = "Фото ")]
         [DataType(DataType.ImageUrl)]

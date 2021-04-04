@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SocialNetwork.Domain;
 using SocialNetwork.Domain.Entities;
 
@@ -23,15 +24,27 @@ namespace SocialNetwork.Controllers
         }
         public IActionResult Index()
         {
-            /*var currentUser = await _userManager.GetUserAsync(User);
-            var currentProfile = _dataManager.Profiles.GetProfileByUserId(currentUser.Id);
-            ViewBag.CurrentUserName = currentProfile.Name;*/
-            var messages = _dataManager.Messages.GetAllMessages();
-            //var messages = _dataManager.Messages.GetMessagesByUserId(currentUser.Id);
-            return View(messages);
+            var currentId = _userManager.GetUserId(User);
+            var dialogs = _dataManager.Dialogs.GetDialogsByCurrentUserId(currentId);
+            return View(dialogs);
         }
 
-        public async Task<IActionResult> Create(Message message)
+        public async Task<IActionResult> ShowDialogByUserId(string guid)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var selectedUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == guid);
+            var dialog = _dataManager.Dialogs.GetDialogByMembers(currentUser, selectedUser);
+            return View("ShowDialog", dialog);
+        }
+
+        public IActionResult ShowDialogById(string guid)
+        {
+            var dialog = _dataManager.Dialogs.GetDialogById(guid);
+            return View("ShowDialog", dialog);
+        }
+
+
+        public async Task<IActionResult> Create(Message message, string dialogId)
         {
             if (ModelState.IsValid)
             {
@@ -40,8 +53,7 @@ namespace SocialNetwork.Controllers
                     return Ok();
                 }
                 message.Name = User.Identity?.Name;
-                var sender = await _userManager.GetUserAsync(User);
-                message.SenderId = sender.Id;
+                message.DialogId = dialogId;
                 await _dataManager.Messages.AddMessageAsync(message);
                 return Ok();
             }

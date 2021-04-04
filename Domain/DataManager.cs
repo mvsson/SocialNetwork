@@ -10,13 +10,15 @@ namespace SocialNetwork.Domain
     public class DataManager
     {
         public IProfilesRepository Profiles { get; set; }
-        public IUserTagsRepository UserTags { get; set; }
+        public ISkillTagsRepository SkillTags { get; set; }
         public IMessagesRepository Messages { get; set; }
-        public DataManager(IProfilesRepository profiles, IUserTagsRepository userTags, IMessagesRepository messages)
+        public IDialogsRepository Dialogs { get; set; }
+        public DataManager(IProfilesRepository profiles, ISkillTagsRepository skillTags, IMessagesRepository messages, IDialogsRepository dialogs)
         {
             Profiles = profiles;
-            UserTags = userTags;
+            SkillTags = skillTags;
             Messages = messages;
+            Dialogs = dialogs;
         }
     }
 }

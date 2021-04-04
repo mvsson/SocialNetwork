@@ -1,12 +1,14 @@
 ﻿class Message {
-    constructor(username, text, when) {
+    constructor(username, text, when, dialogid) {
         this.name = username;
         this.text = text;
         this.dateadded = when;
+        this.dialogId = dialogid;
     }
 }
 
-// userName is declared in razor page.
+// userName and dialogId are declared in razor page.
+const dialogId = currentDialogId;
 const username = userName;
 const textInput = document.getElementById('messageText');
 const whenInput = document.getElementById('when');
@@ -37,23 +39,27 @@ function sendMessage() {
     if (text.trim() === "") return;
     
     let when = new Date();
-    let message = new Message(username, text, when);
+    let dialogid = dialogId;
+    let message = new Message(username, text, when, dialogid);
     sendMessageToHub(message);
 }
 
 function addMessageToChat(message) {
+    if (dialogId !== message.dialogId) {
+        return;
+    }
     let isCurrentUserMessage = message.name == username;
 
     let container = document.createElement('div');
-    container.className = isCurrentUserMessage ? "container darker bg-primary" : "container bg-light";
+    container.className = isCurrentUserMessage ? "container darker bg-info" : "container bg-light";
 
     let sender = document.createElement('p');
     sender.className = "sender";
-    sender.className += isCurrentUserMessage ? " text-right text-white" : " text-left"; /////////
+    sender.className += isCurrentUserMessage ? " text-right text-white" : " text-left"; 
     sender.innerHTML = message.name;
 
     let text = document.createElement('p');
-    text.className = isCurrentUserMessage ? "text-right text-white" : "text-left"; ////////
+    text.className = isCurrentUserMessage ? "text-right text-white" : "text-left"; 
     text.innerHTML = message.text;
 
     let when = document.createElement('span');

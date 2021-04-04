@@ -10,5 +10,11 @@
     "inputFiles": [
       "wwwroot/js/chat.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+    "inputFiles": [
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.css"
+    ]
   }
 ]

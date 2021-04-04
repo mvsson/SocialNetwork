@@ -1,4 +1,4 @@
-﻿@model UserProfile
+﻿@model EditProfileViewModel
 
 @{
     string strTitle = "Редактировать профайл";
@@ -9,52 +9,120 @@
     <h2>@strTitle</h2>
     <div>
         <form asp-area="" asp-controller="Profile" asp-action="Edit" method="post" enctype="multipart/form-data">
-            <input type="hidden" asp-for="CustomUserId" />
-            <input type="hidden" asp-for="AvatarImagePath" />
-
-            <div asp-validation-summary="All"></div>
-            <div class="form-group">
-                <label asp-for="Name"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SurName"></label>
-                <input asp-for="SurName" class="form-control" />
-                <span asp-validation-for="SurName"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateOfBirth"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
-                <span asp-validation-for="DateOfBirth"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AvatarImagePath"></label>
-                <div class="row">
-                    @{
-                        if (Model?.AvatarImagePath?.Length > 1)
+            <div class="row">
+                <div class="col-sm">
+                    <input type="hidden" asp-for="Profile.CustomUserId"/>
+                    <input type="hidden" asp-for="Profile.AvatarImagePath"/>
+                    <div asp-validation-summary="All"></div>
+                    <div class="form-group">
+                        <label asp-for="Profile.Name"></label>
+                        <input asp-for="Profile.Name" class="form-control"/>
+                        <span asp-validation-for="Profile.Name"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Profile.SurName"></label>
+                        <input asp-for="Profile.SurName" class="form-control"/>
+                        <span asp-validation-for="Profile.SurName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Profile.Email"></label>
+                        <input asp-for="Profile.Email" class="form-control"/>
+                        <span asp-validation-for="Profile.Email"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Profile.DateOfBirth"></label>
+                        <input asp-for="Profile.DateOfBirth" class="form-control"/>
+                        <span asp-validation-for="Profile.DateOfBirth"></span>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label asp-for="Profile.AvatarImagePath"></label>
+                        <div class="col-sm-2">
+                            @{
+                                if (Model.Profile.AvatarImagePath != null)
+                                {
+                                    <img class="img-thumbnail" src="~/images/@Model.Profile.AvatarImagePath" />
+                                }
+                                else
+                                {
+                                    <img class="img-thumbnail" src="~/images/default/img_avatar2.png"/>
+                                }
+                            }
+                        </div>
+                        @if (Model.Profile.AvatarImagePath != null)
                         {
-                            <div class="col-sm-2">
-                                <img class="img-thumbnail" src="~/images/@Model?.AvatarImagePath" />
-                            </div>
+                            <a class="btn btn-outline-danger" asp-controller="Profile" asp-action="DeleteAvatar">&#10008;</a>
                         }
-                    }
-                    <input type="file" name="avatarImageFile" id="avatarImageFile" />
+                        <input type="file" asp-for="PhotoFile"/>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="UserTags"></label>
-                <input asp-for="UserTags" class="form-control" />
-                <span asp-validation-for="UserTags"></span>
-            </div> 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Сохранить</button>
-            </div>
         </form>
+        <br />
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label class="font-weight-bold" asp-for="Profile.OwnSkills"></label>
+                    <form asp-action="AddSkill" asp-route-codeWord="own">
+                        <div class="input-group">
+                            <input type="search" name="name" class="form-control" list="skills" />
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-success">&#10133;</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <div class="row">
+                        @{
+                            foreach (var skillTag in Model.Profile.OwnSkills)
+                            {
+                                <div class="nav-link">
+                                    @skillTag.Name
+                                </div>
+                                <a class="btn btn-outline-danger" asp-controller="Profile" asp-action="DeleteSkill"
+                                   asp-route-codeWord="own" asp-route-skillId="@skillTag.Id">&#10008;</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label class="font-weight-bold" asp-for="Profile.WantedSkills"></label>
+                    <form asp-action="AddSkill" asp-route-codeWord="want">
+                        <div class="input-group">
+                            <input type="search" name="name" class="form-control" list="skills" />
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-success">&#10133;</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+                    <div class="row">
+                        @{
+                            foreach (var skillTag in Model.Profile.WantedSkills)
+                            {
+                                <div class="nav-link">
+                                    @skillTag.Name
+                                </div>
+                                <a class="btn btn-outline-danger" asp-controller="Profile" asp-action="DeleteSkill" 
+                                   asp-route-codeWord="want" asp-route-skillId="@skillTag.Id">&#10008;</a>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <datalist class="form-group" id="skills">
+            @foreach (var skill in Model.SkillTags)
+            {
+                <option class="form-check-label" value="@skill.Name"/>
+            }
+        </datalist>
     </div>
 </div>

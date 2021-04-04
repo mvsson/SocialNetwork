@@ -14,10 +14,8 @@ namespace SocialNetwork.Domain.Entities
         [Display(Name = "Имя отправителя")]
         public override string Name { get; set; }
 
-        public string SenderId { get; set; }
-        [ForeignKey(nameof(SenderId))]
-        public CustomUser Sender { get; set; }
-
-        public string RecipientId { get; set; }
+        public string DialogId { get; set; }
+        [ForeignKey(nameof(DialogId))]
+        public Dialog Dialog { get; set; }
     }
 }

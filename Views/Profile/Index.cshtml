@@ -1,0 +1,66 @@
+﻿@model UserProfile
+@{
+    ViewBag.Title = Model?.Name;
+}
+
+<div class="row">
+    <div class="col-sm">
+        <h1>
+            @Model?.Name @Model?.SurName
+        </h1>
+        <h2>
+
+        </h2>
+        <div>
+            @{
+                if (Model?.AvatarImagePath != null)
+                {
+                    <img class="img-fluid" src="~/images/@Model?.AvatarImagePath"/>
+                }
+                else
+                {
+                    <img class="img-fluid" src="~/images/default/img_avatar2.png"/>
+                }
+            }
+        </div>
+        @if (!ViewBag.IsCurrentUser)
+        {
+            <div>
+                <a class="btn btn-primary" asp-controller="Messages" asp-action="ShowDialogByUserId" asp-route-guid="@Model.CustomUserId">Написать сообщение</a>
+            </div>
+        }
+    </div>
+    
+    <div class="col-sm">
+        <br />
+        <br />
+        <div class="form-group">
+            <label class="font-weight-bold" asp-for="OwnSkills"></label>
+            <div class="row">
+                @{
+                    foreach (var skillTag in Model.OwnSkills)
+                    {
+                        <div class="nav-item">
+                            <a class="btn btn-outline-primary" asp-controller="Searching" asp-action="Search"
+                               asp-route-skill="@skillTag.Name">@skillTag.Name</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="font-weight-bold" asp-for="WantedSkills"></label>
+            <div class="row">
+                @{
+                    foreach (var skillTag in Model.WantedSkills)
+                    {
+                        <div>
+                            <a class="btn btn-outline-primary" asp-controller="Searching" asp-action="Search" 
+                               asp-route-skill="@skillTag.Name">@skillTag.Name</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

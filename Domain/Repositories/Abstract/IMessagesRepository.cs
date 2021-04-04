@@ -8,10 +8,6 @@ namespace SocialNetwork.Domain.Repositories.Abstract
 {
     public interface IMessagesRepository
     {
-        IQueryable<Message> GetAllMessages();
-        IQueryable<Message> GetMessagesByUserId(string guid);
         Task AddMessageAsync(Message message);
-
-
     }
 }

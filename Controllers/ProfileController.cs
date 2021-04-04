@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SocialNetwork.Domain;
 using SocialNetwork.Domain.Entities;
+using SocialNetwork.Models;
 using SocialNetwork.Services;
 
 namespace SocialNetwork.Controllers
@@ -25,38 +28,103 @@ namespace SocialNetwork.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Show(string id)
+        public IActionResult Index(string id)
         {
-            id ??= _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(id))
+            {
+                id = _userManager.GetUserId(User);
+                ViewBag.IsCurrentUser = true;
+            }else if (id == _userManager.GetUserId(User))
+            {
+                ViewBag.IsCurrentUser = true;
+            }
+            else
+            {
+                ViewBag.IsCurrentUser = false;
+            }
             return View(_dataManager.Profiles.GetProfileByUserId(id));
         }
 
         public IActionResult Edit()
         {
             var guid = _userManager.GetUserId(User);
-            UserProfile entity = _dataManager.Profiles.GetProfileByUserId(guid);
-            
-            return View(entity);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(UserProfile model, IFormFile avatarImageFile)
-        {
-            if (ModelState.IsValid && avatarImageFile.IsPicExtention() && avatarImageFile.IsValidSize(2*1024*1024)) // size = 2Mb
+            UserProfile profile = _dataManager.Profiles.GetProfileByUserId(guid);
+            var skillTags = _dataManager.SkillTags.GetAllSkills();
+            var model = new EditProfileViewModel()
             {
-                if (avatarImageFile != null)
+                Profile = profile,
+                SkillTags = skillTags
+            }; 
+            
+            return View(model);
+        }
+        [RequestSizeLimit(3*1024*1024)]
+        [HttpPost]
+        public IActionResult Edit(EditProfileViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.PhotoFile != null)
                 {
-                    model.AvatarImagePath = avatarImageFile.FileName;
-                    using (var stream = new FileStream(Path.Combine(_hostingEnvironment.WebRootPath, "images/", avatarImageFile.FileName),
+                    model.Profile.AvatarImagePath = model.PhotoFile.FileName;
+#pragma warning disable IDE0063 
+                    using (var stream = new FileStream(Path.Combine(_hostingEnvironment.WebRootPath, "images/", model.PhotoFile.FileName),
+#pragma warning restore IDE0063 
                         FileMode.Create))
                     {
-                        avatarImageFile.CopyTo(stream);
+                        model.PhotoFile.CopyTo(stream);
                     }
                 }
-                _dataManager.Profiles.SaveProfile(model);
-                return RedirectToAction(nameof(Show));
+                _dataManager.Profiles.SaveProfile(model.Profile);
+                return RedirectToAction(nameof(Edit));
             }
-            return View(model);
+            return RedirectToAction(nameof(Edit));
+        }
+
+        public IActionResult AddSkill(string name, string codeWord) // "codeWord" is 'want' or 'own', that arg is for identity skills collection
+        {
+            if (ModelState.IsValid && name != null && name.Trim() != "")
+            {
+                var profile = _dataManager.Profiles.GetProfileByUserId(_userManager.GetUserId(User));
+                var skill = _dataManager.SkillTags.GetSkillByNameOrNew(name.Trim());
+                switch (codeWord)
+                {
+                    case "own":
+                        _dataManager.Profiles.AddOwnSkillInProfile(profile, skill);
+                        break;
+                    case "want":
+                        _dataManager.Profiles.AddWantSkillInProfile(profile, skill);
+                        break;
+                }
+                return RedirectToAction(nameof(Edit));
+            }
+            return RedirectToAction(nameof(Edit));
+        }
+
+        public IActionResult DeleteSkill(string skillId, string codeWord)
+        {
+            var profile = _dataManager.Profiles.GetProfileByUserId(_userManager.GetUserId(User));
+            var skill = _dataManager.SkillTags.GetSkillById(skillId);
+
+            switch (codeWord)
+            {
+                case "own":
+                    _dataManager.Profiles.DeleteOwnTagFromProfile(profile, skill);
+                    break;
+                case "want":
+                    _dataManager.Profiles.DeleteWantTagFromProfile(profile, skill);
+                    break;
+            }
+            return RedirectToAction(nameof(Edit));
+        }
+
+        public IActionResult DeleteAvatar()
+        {
+            var id = _userManager.GetUserId(User);
+            var profile = _dataManager.Profiles.GetProfileByUserId(id);
+            profile.AvatarImagePath = null;
+            _dataManager.Profiles.SaveProfile(profile);
+            return RedirectToAction(nameof(Edit));
         }
     }
 }

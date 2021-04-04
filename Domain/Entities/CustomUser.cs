@@ -13,10 +13,10 @@ namespace SocialNetwork.Domain.Entities
     {
         public CustomUser() :base()
         {
-            Messages = new HashSet<Message>();
+            Dialogs = new List<Dialog>();
         }
 
         public UserProfile UserProfile { get; set; }
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<Dialog> Dialogs { get; set; }
     }
 }

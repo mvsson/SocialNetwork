@@ -35,8 +35,9 @@ namespace SocialNetwork
             services.AddControllersWithViews();
 
             services.AddTransient<IProfilesRepository, EfProfilesRepository>();
-            services.AddTransient<IUserTagsRepository, EfUserTagsRepository>();
+            services.AddTransient<ISkillTagsRepository, EfSkillTagsRepository>();
             services.AddTransient<IMessagesRepository, EFMessagesRepository>();
+            services.AddTransient<IDialogsRepository, EFDialogsRepository>();
             services.AddTransient<DataManager>();
 
             // добавление ApplicationDbContext 

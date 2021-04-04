@@ -15,15 +15,6 @@ namespace SocialNetwork.Domain.Repositories.EntityFramework
         {
             _context = context;
         }
-        public IQueryable<Message> GetAllMessages()
-        {
-            return _context.Messages;
-        }
-
-        public IQueryable<Message> GetMessagesByUserId(string guid)
-        {
-            return _context.Messages.Where(m => m.SenderId == guid);
-        }
 
         public async Task AddMessageAsync(Message message)
         {

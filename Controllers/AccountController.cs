@@ -77,7 +77,7 @@ namespace SocialNetwork.Controllers
                 {
                     UserName = model.Email, 
                     Email = model.Email, 
-                    UserProfile = new UserProfile() { Email = model.Email}
+                    UserProfile = new UserProfile() { Name = model.Email, Email = model.Email}
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -87,7 +87,9 @@ namespace SocialNetwork.Controllers
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
+#pragma warning disable IDE0037
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
+#pragma warning restore IDE0037
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(model.Email, "Confirm your email",
@@ -95,7 +97,9 @@ namespace SocialNetwork.Controllers
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+#pragma warning disable IDE0037
                         return RedirectToPage("RegisterConfirmation", new { email = model.Email, returnUrl = returnUrl });
+#pragma warning restore IDE0037
                     }
                     else
                     {

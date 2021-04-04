@@ -16,7 +16,8 @@ namespace SocialNetwork.Domain
         { }
         
         public DbSet<UserProfile> Profiles { get; set; }
-        public DbSet<UserTag> UserTags { get; set; }
+        public DbSet<SkillTag> SkillTags { get; set; }
+        public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -1,0 +1,45 @@
+﻿@model SearchViewModel
+
+<form asp-action="Index">
+    <div class="input-group">
+        <input type="search" asp-for="Request" class="form-control" list="skills" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-outline-success">Поиск</button>
+        </div>
+    </div>
+</form>
+
+@{
+    if (Model.Profiles != null )
+    {
+        <div class="row">
+            @foreach (var profile in Model.Profiles)
+            {
+                <div class="col-sm-2">
+                    <a asp-controller="Profile" asp-action="Index" asp-route-id="@profile.CustomUserId">
+                        @{
+                            if (profile.AvatarImagePath == null)
+                            {
+                                <img class="img-thumbnail" src="~/images/default/img_avatar2.png" />
+                            }
+                            else
+                            {
+                                <img class="img-thumbnail" src="~/images/@profile?.AvatarImagePath" />
+                            }
+                        }
+                        @profile.Name @profile.SurName
+                    </a>
+                </div>
+            }
+        </div>
+    }
+}
+
+
+
+<datalist class="form-group" id="skills">
+    @foreach (var skill in Model.Skills)
+    {
+        <option class="form-check-label" value="@skill.Name" />
+    }
+</datalist>
